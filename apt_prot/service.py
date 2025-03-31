@@ -44,4 +44,7 @@ def predict(apt: str, prot: str) -> int:
     X_selected = selection.transform(full_df)
 
     X_poly = poly.transform(X_selected)
+    ans = best_model.predict(X_poly)
+    print("РЕЗУЛЬТАТ МОДЕЛИ")
+    print(ans)
     return best_model.predict(X_poly)
