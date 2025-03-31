@@ -6,11 +6,6 @@ from collections import Counter
 
 from fastapi import HTTPException
 
-# Конфигурация
-MODEL_PATH = "best_model.pkl"
-RNA_PATH = "aptamers.csv"
-SMILES_PATH = "molecules.csv"
-OUTPUT_PATH = "predictions.csv"
 
 # 1. Загрузка модели
 def load_model(path):
