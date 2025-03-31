@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    container_name: rna_viennarna_model
+    command: uvicorn main:app --host 0.0.0.0 --port 4425 --workers 2
+    ports:
+      - "4425:4425"
+    networks:
+      - seq_backend
+
+networks:
+  seq_backend:

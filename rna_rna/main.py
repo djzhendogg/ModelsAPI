@@ -13,12 +13,12 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
-@app.post("/aptamer_prot_binding")
+@app.post("/mfe_rna_rna")
 @limiter.limit("121/minute")
-async def aptamer_prot_binding(
+async def mfe_rna_rna(
         request: Request,
-        apt_sequences: str = Query(default=""),
-        prot_sequences: str = Query(default="")
+        rna1_sequences: str = Query(default=""),
+        rna2_sequences: str = Query(default="")
 ):
 
-    return predict(apt_sequences, prot_sequences)
+    return predict(rna1_sequences, rna2_sequences)

@@ -13,9 +13,9 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
-@app.post("/aptamer_mol_energy")
+@app.post("/aptamer_mol_binding")
 @limiter.limit("121/minute")
-async def generate_latent_representations(
+async def aptamer_mol_binding(
         request: Request,
         rna_sequences: str = Query(default=""),
         mol_smiles: str = Query(default="")
