@@ -26,7 +26,8 @@ def predict(seq, smi) -> int:
         'ATSC8i', 'JGI5'
     ]
     X = final_df[feature_order].astype(float)
-    ans = np.argmax(model.predict_proba(X))[0]
+    ans = np.argmax(model.predict_proba(X))
+    print(ans)
     if ans == 1:
         return True
     else:
