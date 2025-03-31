@@ -35,9 +35,6 @@ PyBioMed==1.0
 Pygments==2.19.1
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
-pytz==2025.1
-pywin32==308
-pyzmq==26.2.1
 scikit-learn==1.6.1
 scipy==1.13.1
 six==1.17.0
