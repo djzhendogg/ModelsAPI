@@ -44,8 +44,8 @@ def predict(apt: str, prot: str) -> int:
     X_selected = selection.transform(full_df)
 
     X_poly = poly.transform(X_selected)
-    ans = best_model.predict(X_poly)
-    print("РЕЗУЛЬТАТ МОДЕЛИ")
-    print(ans)
-    print(type(ans))
-    return ans.item()
+    ans = best_model.predict(X_poly).item()
+    if ans > 0.9:
+        return True
+    else:
+        return False
