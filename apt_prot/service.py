@@ -10,7 +10,7 @@ from utils import (
 
 clf_fs, poly, best_model, config, features_list = load_model()
 
-def predict(apt: str, prot: str) -> int:
+def predict(apt: str, prot: str) -> bool:
     apt_tr = calculate_kmers(apt)
 
     prot_tr = extractPAAC(prot, lambda_val=min(len(prot) - 1, 30))
