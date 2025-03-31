@@ -4,14 +4,13 @@ import pandas as pd
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-from config import MODEL_PATH
 from utils import (
     load_model,
     calculate_molecule_features,
     calculate_rna_features
 )
 
-model = load_model(MODEL_PATH)
+model = load_model("./best_model.pkl")
 
 def predict(seq, smi) -> int:
     rna_features = calculate_rna_features(seq)
