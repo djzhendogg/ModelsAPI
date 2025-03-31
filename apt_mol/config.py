@@ -4,4 +4,5 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-MODEL_PATH = os.getenv('APTAMER_MODEL_PATH')
+PROJECT_PATH = os.getenv('PROJECT_PATH')
+MODEL_PATH = os.getenv('MODEL_PATH')

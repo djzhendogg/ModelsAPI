@@ -8,9 +8,9 @@ services:
     env_file:
       - .env
     container_name: apt_mol_model
-    command: uvicorn main:app --host 0.0.0.0 --port 4434 --workers 2
+    command: uvicorn main:app --host 0.0.0.0 --port 4431 --workers 2
     ports:
-      - "4434:4434"
+      - "4431:4431"
     networks:
       - seq_backend
 
