@@ -14,10 +14,11 @@ model = load_model("./best_model.pkl")
 
 def predict(seq, smi) -> int:
     rna_features = calculate_rna_features(seq)
+    print(rna_features)
     smi_features = calculate_molecule_features(smi)
     final_df = pd.concat([
-        pd.DataFrame(rna_features),
-        pd.DataFrame(smi_features)
+        pd.DataFrame(rna_features, index=[0]),
+        pd.DataFrame(smi_features, index=[0])
     ], axis=1)
     feature_order = [
         'AATSC2i', 'CCA', 'nG12FRing', 'GATS5i',
