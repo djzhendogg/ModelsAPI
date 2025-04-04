@@ -175,3 +175,4 @@ cython_debug/
 apt_prot/src/
 src/
 pca.pkl
+similarity/similarity_calculation.ipynb
