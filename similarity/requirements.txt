@@ -1,6 +1,5 @@
 biopython
 rdkit
-rdkit-pypi
 uvicorn==0.30.6
 fastapi==0.112.0
 fastapi-cli==0.0.5
