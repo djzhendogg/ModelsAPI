@@ -13,7 +13,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
-@app.post("/mfe_rna_rna")
+@app.post("/nanobody_antigen_binding")
 @limiter.limit("121/minute")
 async def mfe_rna_rna(
         request: Request,
