@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from starlette.requests import Request
 
 from service import (
@@ -32,11 +32,20 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 @limiter.limit("121/minute")
 async def mfe_rna_rna(
         request: Request,
-        smiles_1: str = Query(default=""),
-        smiles_2: str = Query(default="")
+        sequences: str = Query(default="")
 ):
+    res = []
+    seq_pair_list = sequences.split(";")
 
-    return calculate_tanimoto_similarity_smiles(smiles_1, smiles_2)
+    if len(seq_pair_list) > 502:
+        error_text = "The number of sequences in the query exceeds 500"
+        raise HTTPException(status_code=429, detail=error_text)
+
+    for seq_pair in seq_pair_list:
+        ss = seq_pair.split(":")
+        res.append(calculate_tanimoto_similarity_smiles(ss[0], ss[1]))
+
+    return {"result": res}
 
 
 
@@ -44,7 +53,16 @@ async def mfe_rna_rna(
 @limiter.limit("121/minute")
 async def mfe_rna_rna(
         request: Request,
-        sequences_1: str = Query(default=""),
-        sequences_2: str = Query(default="")
+        sequences: str = Query(default="")
 ):
-    return calculate_alignment_similarity(sequences_1, sequences_2)
+    res = []
+    seq_pair_list = sequences.split(";")
+
+    if len(seq_pair_list) > 502:
+        error_text = "The number of sequences in the query exceeds 500"
+        raise HTTPException(status_code=429, detail=error_text)
+
+    for seq_pair in seq_pair_list:
+        ss = seq_pair.split(":")
+        res.append(calculate_alignment_similarity(ss[0], ss[1]))
+    return {"result": res}
