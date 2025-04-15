@@ -1,0 +1,140 @@
+from model import (IntraEncoder, InterEncoder, ProteinInteractionNet, TesterPipeline)
+from uncertaintyAwareDeepLearn import VanillaRFFLayer
+from utils import (
+    load_configuration,
+    set_random_seed,
+    get_computation_device,
+)
+
+import esm
+import torch
+
+
+def process_interactions_with_sequences(interaction_file, device):
+    """
+    Обрабатывает файл взаимодействий (с последовательностями) и возвращает эмбеддинги белков.
+
+    Аргументы:
+        interaction_file (str): Путь к файлу с взаимодействиями (sequence A, sequence B, label).
+        device (torch.device): Устройство для вычислений ('cuda' или 'cpu').
+
+    Возвращает:
+        embedding_dict (dict): Словарь уникальных последовательностей и их эмбеддингов.
+    """
+    # Шаг 1: Загрузка модели ESM-2
+    model, alphabet = esm.pretrained.esm2_t30_150M_UR50D()
+    model.to(device)
+    batch_converter = alphabet.get_batch_converter()
+
+    # Шаг 2: Чтение файла с взаимодействиями
+    with open(interaction_file, "r") as f:
+        interaction_data = f.read().strip().split("\n")
+
+    # Извлекаем уникальные последовательности белков
+    unique_sequences = set()
+    for line in interaction_data:
+        sequence_a, sequence_b, _ = line.strip().split("\t")
+        unique_sequences.add(sequence_a)
+        unique_sequences.add(sequence_b)
+
+    # Шаг 3: Извлечение эмбеддингов для уникальных последовательностей
+    embedding_dict = {}
+    for sequence in unique_sequences:
+        # Конвертируем последовательность в токены
+        _, _, batch_tokens = batch_converter([("protein", sequence)])
+        batch_tokens = batch_tokens.to(device)
+
+        # Прогоняем через модель и извлекаем эмбеддинги
+        with torch.no_grad():
+            results = model(batch_tokens, repr_layers=[30], return_contacts=True)
+            embedding = results["representations"][30][0, 1:-1, :].to("cpu")  # Убираем токены [START] и [END]
+            embedding_dict[sequence] = embedding
+
+    return embedding_dict
+
+
+def main(sequence_a, sequence_b):
+    """
+    Главная функция для предсказания взаимодействия двух белков.
+
+    Аргументы:
+        sequence_a (str): Последовательность первого белка.
+        sequence_b (str): Последовательность второго белка.
+        device (str): Устройство для вычислений ('cuda' или 'cpu').
+    """
+    # --- Pre-Training Setup ---
+    # Load configs. Use config file to change hyperparameters.
+    config = load_configuration("config.yaml")
+
+    # Set random seed for reproducibility
+    set_random_seed(config['other']['random_seed'])
+
+    # Determine the computation device (CPU or GPU)
+    device = get_computation_device(config['other']['cuda_device'])
+
+    # --- Model Initialization ---
+    # Initialize the Encoder, Decoder, and overall model
+    intra_encoder = IntraEncoder(config['model']['protein_embedding_dim'], config['model']['hid_dim'],
+                                 config['model']['n_layers'],
+                                 config['model']['n_heads'], config['model']['ff_dim'], config['model']['dropout'],
+                                 config['model']['activation_function'], device)
+    inter_encoder = InterEncoder(config['model']['protein_embedding_dim'], config['model']['hid_dim'],
+                                 config['model']['n_layers'],
+                                 config['model']['n_heads'], config['model']['ff_dim'], config['model']['dropout'],
+                                 config['model']['activation_function'], device)
+    gp_layer = VanillaRFFLayer(in_features=config['model']['hid_dim'], RFFs=config['model']['gp_layer']['rffs'],
+                               out_targets=config['model']['gp_layer']['out_targets'],
+                               gp_cov_momentum=config['model']['gp_layer']['gp_cov_momentum'],
+                               gp_ridge_penalty=config['model']['gp_layer']['gp_ridge_penalty'],
+                               likelihood=config['model']['gp_layer']['likelihood_function'],
+                               random_seed=config['other']['random_seed'])
+    model = ProteinInteractionNet(intra_encoder, inter_encoder, gp_layer, device)
+    model.load_state_dict(torch.load(config['directories']['model_output'], map_location=device))
+    model.eval()
+    model.to(device)
+
+    # Initialize the testing modules
+    tester = TesterPipeline(model)
+
+    # --- Process the input sequences ---
+    # Создаем временный файл с последовательностями для обработки эмбеддингов
+    temp_file = "temp_interaction.tsv"
+    with open(temp_file, "w") as f:
+        f.write(f"{sequence_a}\t{sequence_b}\t0\n")  # Метка 0 используется только как заглушка
+
+    # Обрабатываем последовательности и получаем эмбеддинги
+    embedding_dict = process_interactions_with_sequences(temp_file, device)
+
+    # Извлекаем эмбеддинги из словаря
+    embedding_a = embedding_dict[sequence_a]
+    embedding_b = embedding_dict[sequence_b]
+
+    # Создаем датасет из одной пары
+    protA_lens = len(embedding_a)  # Длина первой последовательности
+    protB_lens = len(embedding_b)  # Длина второй последовательности
+    batch_protA_max_length = protA_lens  # Максимальная длина первой последовательности в батче
+    batch_protB_max_length = protB_lens  # Максимальная длина второй последовательности в батче
+
+    # Создаем датасет с 7 элементами в каждом кортеже
+
+    # dataset = [(embedding_a, embedding_b, 0, protA_lens, protB_lens, batch_protA_max_length, batch_protB_max_length)] # Метка 0 используется как заглушка
+    dataset = [(embedding_a, embedding_b, 0)]
+
+    # --- Make Prediction ---
+    max_seq_length = 100
+    protein_dim = config['model']['protein_embedding_dim']
+
+    loss, T, Y, S = tester.test(dataset, max_seq_length, protein_dim, last_epoch=True)
+
+    # Вывод результата
+    # print("Predicted Interaction Label:", Y[0])  # Предсказанная метка (0 или 1)
+    # print("Predicted Interaction Score:", S[0])  # Вероятность взаимодействия (от 0 до 1)
+    return Y[0]
+
+
+# Execute the main function when the script is run
+if __name__ == "__main__":
+    sequence_a = "MKTAYIAKQRQISFVKSHFSRQDLDLK"  # Последовательность первого белка
+    sequence_b = "MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKSEDEMKASEDLKKHG"  # Второго белка
+
+    main(sequence_a, sequence_b)

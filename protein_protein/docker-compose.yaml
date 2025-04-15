@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    container_name: protein_protein_cont
+    command: uvicorn main:app --host 0.0.0.0 --port 4418 --workers 2
+    ports:
+      - "4418:4418"
+    networks:
+      - seq_backend
+
+networks:
+  seq_backend:
