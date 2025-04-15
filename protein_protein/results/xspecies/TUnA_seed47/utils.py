@@ -26,8 +26,8 @@ def set_random_seed(seed):
     torch.backends.cudnn.deterministic = True
 
 # Load configuration settings from a YAML file
-def load_configuration(config_file):
-    with open(config_file, 'r') as config_file:
+def load_configuration(cname):
+    with open(cname, 'r') as config_file:
         return yaml.safe_load(config_file)
 
 # Determine which device to use for computation (CPU or CUDA)
