@@ -11,7 +11,7 @@ import torch
 def main():
     # --- Pre-Training Setup ---
     # Load configs. Use config file to change hyperparameters.
-    config = load_configuration("config.yaml")
+    config = load_configuration("./config.yaml")
     
     # Set random seed for reproducibility
     set_random_seed(config['other']['random_seed'])

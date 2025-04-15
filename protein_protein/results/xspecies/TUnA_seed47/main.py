@@ -12,7 +12,7 @@ from .utils import (
 def main():
     # --- Pre-Training Setup ---
     # Load configs. Use config file to change hyperparameters.
-    config = load_configuration("config.yaml")
+    config = load_configuration("./config.yaml")
     
     # Set up logging to save output to a text file
     initialize_logging("output/results.txt")
