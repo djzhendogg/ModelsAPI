@@ -43,7 +43,11 @@ async def mfe_rna_rna(
 
     for seq_pair in seq_pair_list:
         ss = seq_pair.split(":")
-        res.append(calculate_tanimoto_similarity_smiles(ss[0], ss[1]))
+        try:
+            ans = calculate_tanimoto_similarity_smiles(ss[0], ss[1])
+        except:
+            ans = None
+        res.append(ans)
 
     return {"result": res}
 
@@ -64,5 +68,9 @@ async def mfe_rna_rna(
 
     for seq_pair in seq_pair_list:
         ss = seq_pair.split(":")
-        res.append(calculate_alignment_similarity(ss[0], ss[1]))
+        try:
+            ans = calculate_alignment_similarity(ss[0], ss[1])
+        except:
+            ans = None
+        res.append(ans)
     return {"result": res}
