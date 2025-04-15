@@ -8,11 +8,12 @@ from .utils import (
     initialize_scheduler,
     train_and_validate_model
 )
+from .config import CONFIG_PATH
 
 def main():
     # --- Pre-Training Setup ---
     # Load configs. Use config file to change hyperparameters.
-    config = load_configuration("./config.yaml")
+    config = load_configuration(CONFIG_PATH)
     
     # Set up logging to save output to a text file
     initialize_logging("output/results.txt")

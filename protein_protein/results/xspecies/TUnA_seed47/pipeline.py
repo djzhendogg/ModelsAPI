@@ -8,6 +8,7 @@ from .utils import (
 
 import esm
 import torch
+from .config import CONFIG_PATH
 
 
 big_model = load_model_custom()
@@ -66,7 +67,7 @@ def main(sequence_a, sequence_b):
     """
     # --- Pre-Training Setup ---
     # Load configs. Use config file to change hyperparameters.
-    config = load_configuration("./config.yaml")
+    config = load_configuration(CONFIG_PATH)
 
     # Set random seed for reproducibility
     set_random_seed(config['other']['random_seed'])

@@ -3,6 +3,7 @@ from .utils import set_random_seed, load_configuration, \
     get_computation_device
 from uncertaintyAwareDeepLearn import VanillaRFFLayer
 import torch
+from .config import CONFIG_PATH, MODEL_PATH
 
 
 def load_model_custom():
@@ -16,7 +17,7 @@ def load_model_custom():
         """
     # --- Pre-Training Setup ---
     # Load configs. Use config file to change hyperparameters.
-    config = load_configuration("./config.yaml")
+    config = load_configuration(CONFIG_PATH)
 
     # Set random seed for reproducibility
     set_random_seed(config['other']['random_seed'])
