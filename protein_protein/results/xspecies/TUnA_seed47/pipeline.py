@@ -1,4 +1,4 @@
-from modeltools import TesterPipeline
+from .modeltools import TesterPipeline
 from custom_loader import load_model_custom
 from utils import (
     load_configuration,
