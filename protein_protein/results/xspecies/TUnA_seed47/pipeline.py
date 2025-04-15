@@ -12,6 +12,10 @@ from .config import CONFIG_PATH
 
 
 big_model = load_model_custom()
+model_esm, alphabet = esm.pretrained.esm2_t30_150M_UR50D()
+model_esm.to("cpu")
+batch_converter = alphabet.get_batch_converter()
+
 
 def process_interactions_with_sequences(interaction_file, device):
     """
@@ -24,11 +28,6 @@ def process_interactions_with_sequences(interaction_file, device):
     Возвращает:
         embedding_dict (dict): Словарь уникальных последовательностей и их эмбеддингов.
     """
-    # Шаг 1: Загрузка модели ESM-2
-    model, alphabet = esm.pretrained.esm2_t30_150M_UR50D()
-    model.to(device)
-    batch_converter = alphabet.get_batch_converter()
-
     # Шаг 2: Чтение файла с взаимодействиями
     with open(interaction_file, "r") as f:
         interaction_data = f.read().strip().split("\n")
@@ -49,7 +48,7 @@ def process_interactions_with_sequences(interaction_file, device):
 
         # Прогоняем через модель и извлекаем эмбеддинги
         with torch.no_grad():
-            results = model(batch_tokens, repr_layers=[30], return_contacts=True)
+            results = model_esm(batch_tokens, repr_layers=[30], return_contacts=True)
             embedding = results["representations"][30][0, 1:-1, :].to("cpu")  # Убираем токены [START] и [END]
             embedding_dict[sequence] = embedding
 
