@@ -1,6 +1,6 @@
 from .modeltools import TesterPipeline
 from .custom_loader import load_model_custom
-from utils import (
+from .utils import (
     load_configuration,
     set_random_seed,
     get_computation_device,
