@@ -1,7 +1,7 @@
 import os
 PROJECT_PATH = os.getcwd()
-MODEL_PATH = os.path.join(PROJECT_PATH, 'results/xspecies/TUnA_seed47/config.yaml')
-CONFIG_PATH = os.path.join(PROJECT_PATH, 'results/xspecies/TUnA_seed47/output/model')
+CONFIG_PATH = os.path.join(PROJECT_PATH, 'results/xspecies/TUnA_seed47/config.yaml')
+MODEL_PATH = os.path.join(PROJECT_PATH, 'results/xspecies/TUnA_seed47/output/model')
 
 if __name__ == "__main__":
     envs = f'{PROJECT_PATH=}\n' \
