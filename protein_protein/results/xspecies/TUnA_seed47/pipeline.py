@@ -17,7 +17,7 @@ model_esm.to("cpu")
 batch_converter = alphabet.get_batch_converter()
 
 
-def process_interactions_with_sequences(interaction_file, device):
+def process_interactions_with_sequences(sequence_a, sequence_b, device):
     """
     Обрабатывает файл взаимодействий (с последовательностями) и возвращает эмбеддинги белков.
 
@@ -28,18 +28,12 @@ def process_interactions_with_sequences(interaction_file, device):
     Возвращает:
         embedding_dict (dict): Словарь уникальных последовательностей и их эмбеддингов.
     """
-    # Шаг 2: Чтение файла с взаимодействиями
-    with open(interaction_file, "r") as f:
-        interaction_data = f.read().strip().split("\n")
-
-    # Извлекаем уникальные последовательности белков
-    unique_sequences = set()
-    for line in interaction_data:
-        sequence_a, sequence_b, _ = line.strip().split("\t")
-        unique_sequences.add(sequence_a)
-        unique_sequences.add(sequence_b)
 
     # Шаг 3: Извлечение эмбеддингов для уникальных последовательностей
+    unique_sequences = set()
+    unique_sequences.add(sequence_a)
+    unique_sequences.add(sequence_b)
+
     embedding_dict = {}
     for sequence in unique_sequences:
         # Конвертируем последовательность в токены
@@ -77,14 +71,8 @@ def main(sequence_a, sequence_b):
     # Initialize the testing modules
     tester = TesterPipeline(big_model)
 
-    # --- Process the input sequences ---
-    # Создаем временный файл с последовательностями для обработки эмбеддингов
-    temp_file = "temp_interaction.tsv"
-    with open(temp_file, "w") as f:
-        f.write(f"{sequence_a}\t{sequence_b}\t0\n")  # Метка 0 используется только как заглушка
-
     # Обрабатываем последовательности и получаем эмбеддинги
-    embedding_dict = process_interactions_with_sequences(temp_file, device)
+    embedding_dict = process_interactions_with_sequences(sequence_a, sequence_b, device)
 
     # Извлекаем эмбеддинги из словаря
     embedding_a = embedding_dict[sequence_a]
