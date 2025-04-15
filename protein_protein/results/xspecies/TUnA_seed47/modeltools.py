@@ -5,8 +5,8 @@ from torch.nn.utils import spectral_norm
 from torch.optim import Adam
 import math
 import numpy as np
-from utils import *
-from lookahead import Lookahead
+from .utils import *
+from .lookahead import Lookahead
 
 class SelfAttention(nn.Module):
     def __init__(self, hid_dim, n_heads, dropout, device):

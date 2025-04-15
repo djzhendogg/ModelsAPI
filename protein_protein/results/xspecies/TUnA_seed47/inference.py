@@ -1,6 +1,6 @@
-from modeltools import (IntraEncoder, InterEncoder, ProteinInteractionNet, Tester)
+from .modeltools import (IntraEncoder, InterEncoder, ProteinInteractionNet, Tester)
 from uncertaintyAwareDeepLearn import VanillaRFFLayer
-from utils import (
+from .utils import (
     load_configuration,
     set_random_seed,
     get_computation_device,

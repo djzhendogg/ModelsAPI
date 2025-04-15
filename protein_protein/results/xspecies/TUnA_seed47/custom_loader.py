@@ -1,5 +1,5 @@
-from modeltools import (IntraEncoder, InterEncoder, ProteinInteractionNet, TesterPipeline)
-from protein_protein.results.xspecies.TUnA_seed47.utils import set_random_seed, load_configuration, \
+from .modeltools import (IntraEncoder, InterEncoder, ProteinInteractionNet, TesterPipeline)
+from .utils import set_random_seed, load_configuration, \
     get_computation_device
 from uncertaintyAwareDeepLearn import VanillaRFFLayer
 import torch
