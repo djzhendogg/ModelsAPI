@@ -15,7 +15,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.post("/protein_protein_binding")
 @limiter.limit("121/minute")
-async def mfe_rna_rna(
+async def protein_protein_binding(
         request: Request,
         sequence_1: str = Query(default=""),
         sequence_2: str = Query(default="")

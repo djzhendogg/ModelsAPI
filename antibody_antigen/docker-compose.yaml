@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    container_name: antibody_antigen_model
+    command: uvicorn main:app --host 0.0.0.0 --port 4415 --workers 2
+    ports:
+      - "4415:4415"
+    networks:
+      - seq_backend
+
+networks:
+  seq_backend:
