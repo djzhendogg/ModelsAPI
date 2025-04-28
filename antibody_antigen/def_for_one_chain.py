@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tape import TAPETokenizer
 from src.config import AA_DATASET, BERT_PATH
 
-device = torch.device('cuda')
+device = torch.device('cpu')
 
 
 class SelfAttention(nn.Module):
@@ -149,7 +149,7 @@ class FusionModel(nn.Module):
 
 def get_feature(Hchain=None, Lchain=None, antigen=None):
     """Генерирует эмбеддинги с сохранением информации об источнике"""
-    device = torch.device('cuda')
+    device = torch.device('cpu')
     model = torch.load(BERT_PATH)
     model = model.to(device)
     model.eval()
