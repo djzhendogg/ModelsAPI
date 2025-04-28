@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
 
 from service import predict
@@ -17,8 +17,27 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 @limiter.limit("121/minute")
 async def aptamer_mol_binding(
         request: Request,
-        rna_sequences: str = Query(default=""),
-        mol_smiles: str = Query(default="")
+        rna_sequences: str,
+        mol_smiles: str
 ):
-
+    # # res = {}
+    # res = []
+    # seq_pair_list = sequences.split(";")
+    #
+    # if len(seq_pair_list) > 502:
+    #     error_text = "The number of sequences in the query exceeds 500"
+    #     raise HTTPException(status_code=429, detail=error_text)
+    #
+    # for seq_pair in seq_pair_list:
+    #     ss = seq_pair.split(":")
+    #     try:
+    #         # predict(rna_sequences, mol_smiles)
+    #         ans = predict(ss[0], ss[1])
+    #     except:
+    #         ans = None
+    #     # res[ss] = ans
+    #     res.append(ans)
+    #
+    # return {"result": res}
+    print(mol_smiles)
     return predict(rna_sequences, mol_smiles)

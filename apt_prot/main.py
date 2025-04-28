@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from starlette.requests import Request
 
 from service import predict
@@ -17,8 +17,24 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 @limiter.limit("121/minute")
 async def aptamer_prot_binding(
         request: Request,
-        apt_sequences: str = Query(default=""),
-        prot_sequences: str = Query(default="")
+        sequences: str
 ):
+    # res = {}
+    res = []
+    seq_pair_list = sequences.split(";")
 
-    return predict(apt_sequences, prot_sequences)
+    if len(seq_pair_list) > 502:
+        error_text = "The number of sequences in the query exceeds 500"
+        raise HTTPException(status_code=429, detail=error_text)
+
+    for seq_pair in seq_pair_list:
+        ss = seq_pair.split(":")
+        try:
+            # predict(apt_sequences, prot_sequences)
+            ans = predict(ss[0], ss[1])
+        except:
+            ans = None
+        # res[ss] = ans
+        res.append(ans)
+
+    return {"result": res}
