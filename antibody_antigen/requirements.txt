@@ -49,12 +49,7 @@ protobuf==6.30.2
 psutil==7.0.0
 pure_eval==0.2.3
 Pygments==2.19.1
-python-dateutil==2.9.0.post0
-pytz==2025.2
-pywin32==310
-pyzmq==26.3.0
 requests==2.32.3
-s3transfer==0.11.4
 scikit-learn==1.6.1
 scipy==1.15.2
 six==1.17.0
