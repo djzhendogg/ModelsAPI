@@ -24,4 +24,4 @@ async def predict_affinity_LH(
     LH = anitibody.split("|")
     if len(LH) < 2:
         return predict_affinity_one_chain(anitibody, antigen)
-    return predict_affinity(LH[0], LH[1], antigen)
+    return predict_affinity(LH[1], LH[0], antigen)
