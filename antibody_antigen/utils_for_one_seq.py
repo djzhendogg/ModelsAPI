@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 from sklearn.preprocessing import MinMaxScaler
-from .src.config import AA_DATASET
+from src.config import AA_DATASET
 
 
 def embed_dict(ab_seq_h, ab_seq_l, prot_seq, seq_natural_embedding):

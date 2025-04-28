@@ -1,6 +1,6 @@
 import torch
-from .def_for_one_chain import ModelAffinity, get_feature, seq_aaindex_dict, embed_dict
-from .src.config import MODEL_PATH
+from def_for_one_chain import ModelAffinity, get_feature, seq_aaindex_dict, embed_dict
+from src.config import MODEL_PATH
 
 
 batch_size = 16

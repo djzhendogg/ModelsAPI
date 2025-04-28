@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Query, HTTPException
 from starlette.requests import Request
 
-from .prediction_for_one_seq import predict_affinity
-from .for_one_chain import predict_affinity_one_chain
+from prediction_for_one_seq import predict_affinity
+from for_one_chain import predict_affinity_one_chain
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded

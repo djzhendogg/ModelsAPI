@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.preprocessing import MinMaxScaler
 from tape import TAPETokenizer
-from .src.config import AA_DATASET
+from src.config import AA_DATASET
 
 device = torch.device('cuda')
 

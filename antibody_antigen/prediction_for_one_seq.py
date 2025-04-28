@@ -1,9 +1,9 @@
 import torch
 
-from .embed import get_feature
-from .src.models.mvsf_for_one_seq import ModelAffinity
-from .utils_for_one_seq import embed_dict, seq_aaindex_dict
-from .src.config import MODEL_PATH
+from embed import get_feature
+from src.models.mvsf_for_one_seq import ModelAffinity
+from utils_for_one_seq import embed_dict, seq_aaindex_dict
+from src.config import MODEL_PATH
 
 batch_size = 16  # Should match the batch size used during training
 use_cuda = torch.cuda.is_available()  # Set to True if using GPU
