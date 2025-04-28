@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.preprocessing import MinMaxScaler
 from tape import TAPETokenizer
-from src.config import AA_DATASET
+from src.config import AA_DATASET, BERT_PATH
 
 device = torch.device('cuda')
 
@@ -150,7 +150,7 @@ class FusionModel(nn.Module):
 def get_feature(Hchain=None, Lchain=None, antigen=None):
     """Генерирует эмбеддинги с сохранением информации об источнике"""
     device = torch.device('cuda')
-    model = torch.load(AA_DATASET)
+    model = torch.load(BERT_PATH)
     model = model.to(device)
     model.eval()
     tokenizer = TAPETokenizer(vocab='iupac')
