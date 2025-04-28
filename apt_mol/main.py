@@ -39,5 +39,4 @@ async def aptamer_mol_binding(
     #     res.append(ans)
     #
     # return {"result": res}
-    print(mol_smiles)
     return predict(rna_sequences, mol_smiles)

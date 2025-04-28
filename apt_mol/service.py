@@ -14,7 +14,6 @@ model = load_model("./best_model.pkl")
 
 def predict(seq, smi) -> bool:
     rna_features = calculate_rna_features(seq)
-    print(rna_features)
     smi_features = calculate_molecule_features(smi)
     final_df = pd.concat([
         pd.DataFrame(rna_features, index=[0]),
