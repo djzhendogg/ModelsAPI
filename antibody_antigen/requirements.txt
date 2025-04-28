@@ -60,10 +60,10 @@ tape-proteins==0.5
 tbb==2021.13.1
 tensorboardX==2.6.2.2
 threadpoolctl==3.6.0
-torch==2.3.0+cu121
-torchaudio==2.3.0+cu121
+torch==2.3.0
+torchaudio==2.3.0
 torcheval==0.0.7
-torchvision==0.18.0+cu121
+torchvision==0.18.0
 tornado==6.4.2
 tqdm==4.67.1
 traitlets==5.14.3
