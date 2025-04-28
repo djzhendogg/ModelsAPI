@@ -6,7 +6,7 @@ from protein_bert_pytorch import ProteinBERT
 from tape import TAPETokenizer
 from tqdm import tqdm
 
-from .src.config import BERT_PATH
+from src.config import BERT_PATH
 
 device = torch.device('cpu')
 bert_model = torch.load(BERT_PATH)
