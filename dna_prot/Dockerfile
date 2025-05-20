@@ -27,6 +27,8 @@ RUN mamba env create -f /app/RF2na-linux.yml
 COPY . /app
 WORKDIR /app
 
+RUN conda run -n RF2NA pip install torch==2.1.2+cpu torchvision==0.16.2+cpu torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+
 # Установка зависимостей SE3Transformer
 SHELL ["conda", "run", "-n", "RF2NA", "/bin/bash", "-c"]
 RUN cd SE3Transformer && \
