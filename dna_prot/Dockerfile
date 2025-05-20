@@ -1,9 +1,9 @@
-# Базовый образ с поддержкой Conda и CUDA
-FROM nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+FROM ubuntu:22.04
 
-# Установка базовых утилит
+# Установка базовых пакетов
 RUN apt-get update && apt-get install -y \
     wget git curl bzip2 build-essential \
+    ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка Miniconda
@@ -14,31 +14,34 @@ RUN curl -sLo miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest
 
 ENV PATH=$CONDA_DIR/bin:$PATH
 
-# Установка mamba для более быстрой установки окружений
+# Установка mamba
 RUN conda install -n base -c conda-forge mamba -y
 
-# Копируем файл окружения в контейнер
+# Копируем файл окружения
 COPY RF2na-linux.yml /app/RF2na-linux.yml
 
-# Создание Conda окружения
+# Создаём окружение
 RUN mamba env create -f /app/RF2na-linux.yml
 
-# Активация окружения
-SHELL ["conda", "run", "-n", "RF2NA", "/bin/bash", "-c"]
-
-# Копируем код проекта (предполагаем, что SE3Transformer находится в той же директории)
+# Копируем проект в контейнер
 COPY . /app
 WORKDIR /app
 
-# Установка SE3Transformer
+# Установка зависимостей SE3Transformer
+SHELL ["conda", "run", "-n", "RF2NA", "/bin/bash", "-c"]
 RUN cd SE3Transformer && \
     pip install --no-cache-dir -r requirements.txt && \
     python setup.py install
+
+# Установка FastAPI-зависимостей
+RUN pip install \
+    uvicorn==0.30.1 \
+    fastapi==0.112.0 \
+    fastapi-cli \
+    flatbuffers \
+    slowapi
 
 # Загрузка весов
 RUN cd network && \
     wget https://files.ipd.uw.edu/dimaio/RF2NA_apr23.tgz && \
     tar xvfz RF2NA_apr23.tgz
-
-# По умолчанию запуск интерактивной оболочки (можно заменить на запуск скрипта)
-CMD ["conda", "run", "-n", "RF2NA", "bash"]

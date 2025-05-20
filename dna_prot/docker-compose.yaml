@@ -6,7 +6,9 @@ services:
       context: .
     restart: always
     container_name: dna_prot_model
-    command: uvicorn main:app --host 0.0.0.0 --port 4409 --workers 2
+    command:
+      conda run --no-capture-output -n RF2NA
+      uvicorn main:app --host 0.0.0.0 --port 4409 --workers 2
     ports:
       - "4409:4409"
     networks:

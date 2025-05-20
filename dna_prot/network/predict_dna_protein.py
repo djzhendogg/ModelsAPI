@@ -115,7 +115,7 @@ def pae_unbin(pred_pae):
     return torch.sum(pae_bins[None,:,None,None]*pred_pae, dim=1)
 
 class Predictor():
-    def __init__(self, model_weights, device="cuda:0"):
+    def __init__(self, model_weights, device="cpu"):
         self.model_weights = model_weights
         self.device = device
         self.active_fn = nn.Softmax(dim=1)
