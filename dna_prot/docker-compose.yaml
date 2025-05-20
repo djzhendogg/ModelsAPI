@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    container_name: dna_prot_model
+    command: uvicorn main:app --host 0.0.0.0 --port 4409 --workers 2
+    ports:
+      - "4409:4409"
+    networks:
+      - seq_backend
+
+networks:
+  seq_backend:
