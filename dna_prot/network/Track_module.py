@@ -9,7 +9,7 @@ from .SE3_network import SE3TransformerWrapper
 from .loss import (
     calc_BB_bond_geom_grads, calc_lj_grads, calc_hb_grads, calc_lj
 )
-from chemical import NTOTALDOFS
+from .chemical import NTOTALDOFS
 
 # Module contains classes and functions to generate initial embeddings
 class PositionalEncoding2D(nn.Module):
