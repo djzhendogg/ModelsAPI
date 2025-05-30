@@ -340,15 +340,15 @@ class IterBlock(nn.Module):
                                       n_head=n_head_msa,
                                       d_state=SE3_param['l0_out_features'],
                                       use_global_attn=use_global_attn,
-                                      d_hidden=d_hidden_msa, p_drop=p_drop)
+                                      d_hidden=d_hidden_msa, p_drop=p_drop).to(torch.device('cpu'))
         self.msa2pair = MSA2Pair(d_msa=d_msa, d_pair=d_pair,
-                                 d_hidden=d_hidden//2, p_drop=p_drop)
+                                 d_hidden=d_hidden//2, p_drop=p_drop).to(torch.device('cpu'))
         self.pair2pair = PairStr2Pair(d_pair=d_pair, n_head=n_head_pair, 
-                                      d_hidden=d_hidden, p_drop=p_drop)
+                                      d_hidden=d_hidden, p_drop=p_drop).to(torch.device('cpu'))
         self.str2str = Str2Str(d_msa=d_msa, d_pair=d_pair,
                                d_state=SE3_param['l0_out_features'],
                                SE3_param=SE3_param,
-                               p_drop=p_drop)
+                               p_drop=p_drop).to(torch.device('cpu'))
 
     def forward(self, msa, pair, xyz, state, idx, use_checkpoint=False):
         cas = xyz[:,:,1,:].contiguous()
@@ -365,9 +365,9 @@ class IterBlock(nn.Module):
             msa = self.msa2msa(msa, pair, rbf_feat, state)
             pair = self.msa2pair(msa, pair)
             pair = self.pair2pair(pair, rbf_feat)
-
-            xyz, state, alpha = self.str2str(msa.float(), pair.float(), xyz.detach().float(), state.float(), idx, top_k=0)
-        
+            self.str2str.eval()
+            with torch.no_grad():
+                xyz, state, alpha = self.str2str(msa.float(), pair.float(), xyz.detach().float(), state.float(), idx, top_k=0)
         return msa, pair, xyz, state, alpha
 
 class IterativeSimulator(nn.Module):
