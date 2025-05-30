@@ -1,5 +1,5 @@
 import argparse
-import data_loader
+from .data_loader import *
 import os
 
 TRUNK_PARAMS = ['n_extra_block', 'n_main_block', 'n_ref_block',\
@@ -146,7 +146,7 @@ def get_args():
     args = parser.parse_args()
 
     # Setup dataloader parameters:
-    loader_param = data_loader.set_data_loader_params(args)
+    loader_param = set_data_loader_params(args)
 
     # make dictionary for each parameters
     trunk_param = {}

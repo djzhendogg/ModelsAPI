@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import einsum
 import torch.utils.checkpoint as checkpoint
-from util_module import *
-from Attention_module import *
-from SE3_network import SE3TransformerWrapper
-from loss import (
+from .util_module import *
+from .Attention_module import *
+from .SE3_network import SE3TransformerWrapper
+from .loss import (
     calc_BB_bond_geom_grads, calc_lj_grads, calc_hb_grads, calc_lj
 )
 from chemical import NTOTALDOFS

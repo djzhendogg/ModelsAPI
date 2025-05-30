@@ -5,9 +5,9 @@ import csv
 from dateutil import parser
 import numpy as np
 from scipy.sparse.csgraph import shortest_path
-from parsers import parse_a3m, parse_pdb, parse_fasta_if_exists, parse_mixed_fasta
-from chemical import INIT_CRDS, INIT_NA_CRDS, NAATOKENS, MASKINDEX, NTOTAL
-from util import center_and_realign_missing, random_rot_trans
+from .parsers import parse_a3m, parse_pdb, parse_fasta_if_exists, parse_mixed_fasta
+from .chemical import INIT_CRDS, INIT_NA_CRDS, NAATOKENS, MASKINDEX, NTOTAL
+from .util import center_and_realign_missing, random_rot_trans
 import pickle
 import random
 from os.path import exists

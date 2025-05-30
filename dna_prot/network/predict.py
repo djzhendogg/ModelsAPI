@@ -4,15 +4,15 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils import data
-from parsers import parse_a3m, parse_fasta, parse_mixed_fasta, read_template_pdb, parse_pdb_w_seq, read_templates
-from RoseTTAFoldModel  import RoseTTAFoldModule
-import util
+from .parsers import parse_a3m, parse_fasta, parse_mixed_fasta, read_template_pdb, parse_pdb_w_seq, read_templates
+from .RoseTTAFoldModel  import RoseTTAFoldModule
+from .util import *
 from collections import namedtuple
-from ffindex import *
-from data_loader import MSAFeaturize, MSABlockDeletion, merge_a3m_homo, merge_a3m_hetero
-from kinematics import xyz_to_c6d, c6d_to_bins, xyz_to_t2d
-from util_module import XYZConverter
-from chemical import NTOTAL, NTOTALDOFS, NAATOKENS, INIT_CRDS, INIT_NA_CRDS
+from .ffindex import *
+from .data_loader import MSAFeaturize, MSABlockDeletion, merge_a3m_homo, merge_a3m_hetero
+from .kinematics import xyz_to_c6d, c6d_to_bins, xyz_to_t2d
+from .util_module import XYZConverter
+from .chemical import NTOTAL, NTOTALDOFS, NAATOKENS, INIT_CRDS, INIT_NA_CRDS
 
 # suppress dgl warning w/ newest pytorch
 import warnings
@@ -113,13 +113,13 @@ class Predictor():
         # define model & load model
         self.model = RoseTTAFoldModule(
             **MODEL_PARAM,
-            aamask=util.allatom_mask.to(self.device),
-            ljlk_parameters=util.ljlk_parameters.to(self.device),
-            lj_correction_parameters=util.lj_correction_parameters.to(self.device),
-            num_bonds=util.num_bonds.to(self.device),
-            hbtypes=util.hbtypes.to(self.device),
-            hbbaseatoms=util.hbbaseatoms.to(self.device),
-            hbpolys=util.hbpolys.to(self.device)
+            aamask=allatom_mask.to(self.device),
+            ljlk_parameters=ljlk_parameters.to(self.device),
+            lj_correction_parameters=lj_correction_parameters.to(self.device),
+            num_bonds=num_bonds.to(self.device),
+            hbtypes=hbtypes.to(self.device),
+            hbbaseatoms=hbbaseatoms.to(self.device),
+            hbpolys=hbpolys.to(self.device)
         ).to(self.device)
 
         could_load = self.load_model(self.model_weights)
@@ -177,7 +177,7 @@ class Predictor():
 
             # add strand compliment
             if (fseq_i[0]=='D'):
-                msas.append( util.dna_reverse_complement(msa_i) )
+                msas.append( dna_reverse_complement(msa_i) )
                 inss.append( ins_i.clone() )
                 Ls.append(L)
                 types.append(fseq_i[0])
@@ -196,7 +196,7 @@ class Predictor():
         # pass 2, templates
         L = sum(Ls)
         xyz_t = INIT_CRDS.reshape(1,1,NTOTAL,3).repeat(n_templ,L,1,1) + torch.rand(n_templ,L,1,3)*5.0 - 2.5
-        is_NA = util.is_nucleic(msa_orig[0])
+        is_NA = is_nucleic(msa_orig[0])
         xyz_t[:,is_NA] = INIT_NA_CRDS.reshape(1,1,NTOTAL,3)
 
         mask_t = torch.full((n_templ, L, NTOTAL), False) 
@@ -347,7 +347,7 @@ class Predictor():
         for prob in prob_s:
             prob += 1e-8
             prob = prob / torch.sum(prob, dim=0)[None]
-        util.writepdb(out_prefix+".pdb", best_xyz[0], seq[0, -1], L_s, bfacts=100*best_lddt[0].float())
+        writepdb(out_prefix+".pdb", best_xyz[0], seq[0, -1], L_s, bfacts=100*best_lddt[0].float())
         prob_s = [prob.permute(1,2,0).detach().cpu().numpy().astype(np.float16) for prob in prob_s]
         np.savez_compressed("%s.npz"%(out_prefix), 
             dist=prob_s[0].astype(np.float16), \

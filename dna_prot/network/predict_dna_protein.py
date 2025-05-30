@@ -5,14 +5,14 @@ import torch
 import torch.nn as nn
 from torch.utils import data
 from .parsers import parse_a3m, parse_fasta, parse_mixed_fasta, read_template_pdb, parse_pdb_w_seq, read_templates
-from RoseTTAFoldModel  import RoseTTAFoldModule
-import util
+from .RoseTTAFoldModel  import RoseTTAFoldModule
+from .util import *
 from collections import namedtuple
-from ffindex import *
-from data_loader import MSAFeaturize, MSABlockDeletion, merge_a3m_homo, merge_a3m_hetero
-from kinematics import xyz_to_c6d, c6d_to_bins, xyz_to_t2d
-from util_module import XYZConverter
-from chemical import NTOTAL, NTOTALDOFS, NAATOKENS, INIT_CRDS, INIT_NA_CRDS
+from .ffindex import *
+from .data_loader import MSAFeaturize, MSABlockDeletion, merge_a3m_homo, merge_a3m_hetero
+from .kinematics import xyz_to_c6d, c6d_to_bins, xyz_to_t2d
+from .util_module import XYZConverter
+from .chemical import NTOTAL, NTOTALDOFS, NAATOKENS, INIT_CRDS, INIT_NA_CRDS
 
 # suppress dgl warning w/ newest pytorch
 import warnings
@@ -122,13 +122,13 @@ class Predictor():
 
         self.model = RoseTTAFoldModule(
             **MODEL_PARAM,
-            aamask=util.allatom_mask.to(self.device),
-            ljlk_parameters=util.ljlk_parameters.to(self.device),
-            lj_correction_parameters=util.lj_correction_parameters.to(self.device),
-            num_bonds=util.num_bonds.to(self.device),
-            hbtypes=util.hbtypes.to(self.device),
-            hbbaseatoms=util.hbbaseatoms.to(self.device),
-            hbpolys=util.hbpolys.to(self.device)
+            aamask=allatom_mask.to(self.device),
+            ljlk_parameters=ljlk_parameters.to(self.device),
+            lj_correction_parameters=lj_correction_parameters.to(self.device),
+            num_bonds=num_bonds.to(self.device),
+            hbtypes=hbtypes.to(self.device),
+            hbbaseatoms=hbbaseatoms.to(self.device),
+            hbpolys=hbpolys.to(self.device)
         ).to(self.device)
 
         could_load = self.load_model(self.model_weights)

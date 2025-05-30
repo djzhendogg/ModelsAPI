@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
-from Embeddings import MSA_emb, Extra_emb, Templ_emb, Recycling
-from Track_module import IterativeSimulator
-from AuxiliaryPredictor import DistanceNetwork, MaskedTokenNetwork,  LDDTNetwork, PAENetwork, BinderNetwork
-from util import INIT_CRDS
+from .Embeddings import MSA_emb, Extra_emb, Templ_emb, Recycling
+from .Track_module import IterativeSimulator
+from .AuxiliaryPredictor import DistanceNetwork, MaskedTokenNetwork,  LDDTNetwork, PAENetwork, BinderNetwork
+from .util import INIT_CRDS
 from torch import einsum
-from chemical import NAATOKENS
+from .chemical import NAATOKENS
 
 class RoseTTAFoldModule(nn.Module):
     def __init__(
