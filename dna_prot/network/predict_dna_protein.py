@@ -246,25 +246,24 @@ class Predictor():
                 msa_extra_i = msa_extra[:,i_cycle].to(self.device)
                 seq_i = seq[:,i_cycle].to(self.device)
                 
-                with torch.cuda.amp.autocast(True):
-                    logit_s, logit_aa_s, logit_pae, p_bind, init_crds, alpha_prev, _, pred_lddt_binned, msa_prev, pair_prev, state_prev = self.model(
-                        msa_latent=msa_seed_i, 
-                        msa_full=msa_extra_i,
-                        seq=seq_i, 
-                        seq_unmasked=seq_i, 
-                        xyz=xyz_prev, 
-                        sctors=alpha_prev,
-                        idx=idx_pdb,
-                        t1d=t1d, 
-                        t2d=t2d,
-                        xyz_t=xyz_t[:,:,:,1],
-                        mask_t=mask_t_2d,
-                        alpha_t=alpha_t,
-                        msa_prev=msa_prev,
-                        pair_prev=pair_prev,
-                        state_prev=state_prev,
-                        same_chain=same_chain
-                    )
+                logit_s, logit_aa_s, logit_pae, p_bind, init_crds, alpha_prev, _, pred_lddt_binned, msa_prev, pair_prev, state_prev = self.model(
+                    msa_latent=msa_seed_i,
+                    msa_full=msa_extra_i,
+                    seq=seq_i,
+                    seq_unmasked=seq_i,
+                    xyz=xyz_prev,
+                    sctors=alpha_prev,
+                    idx=idx_pdb,
+                    t1d=t1d,
+                    t2d=t2d,
+                    xyz_t=xyz_t[:,:,:,1],
+                    mask_t=mask_t_2d,
+                    alpha_t=alpha_t,
+                    msa_prev=msa_prev,
+                    pair_prev=pair_prev,
+                    state_prev=state_prev,
+                    same_chain=same_chain
+                )
 
                 xyz_prev = init_crds[-1]
                 alpha_prev = alpha_prev[-1]
