@@ -86,4 +86,8 @@ class SE3TransformerWrapper(nn.Module):
         else:
             node_features = {'0': type_0_features}
         edge_features = {'0': edge_features}
-        return self.se3(G, node_features, edge_features)
+
+        self.se3.eval()
+        with torch.no_grad():
+            out = self.se3(G, node_features, edge_features)
+        return out
