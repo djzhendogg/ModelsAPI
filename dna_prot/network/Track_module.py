@@ -1,3 +1,15 @@
+# Добавьте эти строки в САМОМ НАЧАЛЕ файла, перед всеми другими импортами
+import torch.cuda.nvtx
+import contextlib
+
+# Патчинг NVTX функций
+torch.cuda.nvtx.range_push = lambda *args, **kwargs: None
+torch.cuda.nvtx.range_pop = lambda *args, **kwargs: None
+
+# Заглушка для контекстного менеджера
+@contextlib.contextmanager
+def nvtx_range(*args, **kwargs):
+    yield
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
