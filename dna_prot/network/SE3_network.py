@@ -51,8 +51,8 @@ class SE3TransformerWrapper(nn.Module):
                                   #sum_over_edge=False,
                                   use_layer_norm=True,
                                   tensor_cores=True,
-                                  low_memory=True)#,
-                                  #populate_edge='log')
+                                  low_memory=True).to(torch.device('cpu'))
+                                  #populate_edge='log').
 
         self.reset_parameter()
 
