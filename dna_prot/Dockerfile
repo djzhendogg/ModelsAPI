@@ -49,3 +49,4 @@ RUN pip install dgl==0.9.1 --no-cache-dir -f https://data.dgl.ai/wheels/cu102/re
 RUN cd network && \
     wget https://files.ipd.uw.edu/dimaio/RF2NA_apr23.tgz && \
     tar xvfz RF2NA_apr23.tgz
+RUN mkdir

@@ -140,6 +140,7 @@ class Predictor():
 
     def load_model(self, model_weights):
         if not os.path.exists(model_weights):
+            print("File not found")
             return False
         checkpoint = torch.load(model_weights, map_location=self.device)
         self.model.load_state_dict(checkpoint['model_state_dict'])
@@ -297,7 +298,7 @@ if torch.cuda.is_available():
     predictorBase = Predictor("./weights/RF2NA_apr23.pt", torch.device("cuda:0"))
 else:
     print("Running on CPU")
-    predictorBase = Predictor("./weights/RF2NA_apr23.pt", torch.device("cpu"))
+    predictorBase = Predictor("/app/network/weights/RF2NA_apr23.pt", torch.device("cpu"))
 
 # if __name__ == "__main__":
 #     args = get_args()
