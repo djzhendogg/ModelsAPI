@@ -5,7 +5,7 @@ import string
 import os,re
 from os.path import exists
 import random
-import util
+from .util import *
 import gzip
 from ffindex import *
 import torch
@@ -551,7 +551,7 @@ def read_templates(qlen, ffdb, hhr_fn, atab_fn, templ_to_use=[], offset=0, n_tem
         f1d[i, pos] = seq[sel]
         f1d_val[i,pos] = t1d[sel, 2].unsqueeze(-1)
         #
-        xyz[i] = util.center_and_realign_missing(xyz[i], mask_t[i])
+        xyz[i] = center_and_realign_missing(xyz[i], mask_t[i])
     
     f1d = torch.nn.functional.one_hot(f1d, num_classes=NAATOKENS-1).float()
     f1d = torch.cat((f1d, f1d_val), dim=-1)
