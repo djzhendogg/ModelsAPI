@@ -43,6 +43,8 @@ RUN pip install \
     flatbuffers \
     slowapi
 
+RUN pip install --force-reinstall -v "numpy==1.25.2"
+
 # Загрузка весов
 RUN cd network && \
     wget https://files.ipd.uw.edu/dimaio/RF2NA_apr23.tgz && \
