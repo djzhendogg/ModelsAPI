@@ -43,10 +43,10 @@ RUN pip install \
     flatbuffers \
     slowapi
 
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 RUN pip install --force-reinstall -v "numpy==1.25.2"
 RUN pip install dgl==0.9.1 --no-cache-dir -f https://data.dgl.ai/wheels/cu102/repo.html
+RUN conda install -c conda-forge cudatoolkit-dev=11.3
 # Загрузка весов
 RUN cd network && \
     wget https://files.ipd.uw.edu/dimaio/RF2NA_apr23.tgz && \
