@@ -33,5 +33,5 @@ async def protein_protein_binding(
             ans = main(sequence_1, sequence_2)
         except:
             ans = None
-        res[ss] = ans
+        res[seq_pair] = ans
     return {"result": res}
