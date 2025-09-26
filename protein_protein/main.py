@@ -29,8 +29,7 @@ async def protein_protein_binding(
     for seq_pair in seq_pair_list:
         ss = seq_pair.split(">")
         try:
-            # predict(rna_sequences, mol_smiles)
-            ans = main(sequence_1, sequence_2)
+            ans = main(ss[0], ss[1])
         except:
             ans = None
         res[seq_pair] = ans
