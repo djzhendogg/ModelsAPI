@@ -20,5 +20,19 @@ async def protein_protein_binding(
         sequence_1: str = Query(default=""),
         sequence_2: str = Query(default="")
 ):
+    res = {}
+    seq_pair_list = sequences.split(";")
 
-    return main(sequence_1, sequence_2)
+    if len(seq_pair_list) > 502:
+        error_text = "The number of sequences in the query exceeds 500"
+        raise HTTPException(status_code=429, detail=error_text)
+
+    for seq_pair in seq_pair_list:
+        ss = seq_pair.split(">")
+        try:
+            # predict(rna_sequences, mol_smiles)
+            ans = main(sequence_1, sequence_2)
+        except:
+            ans = None
+        res[ss] = ans
+    return {"result": res}
