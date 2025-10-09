@@ -6,9 +6,9 @@ services:
       context: .
     restart: always
     container_name: link_prediction_model
-    command: uvicorn main:app --host 0.0.0.0 --port 4428 --workers 2
+    command: uvicorn main:app --host 0.0.0.0 --port 4407 --workers 2
     ports:
-      - "4428:4428"
+      - "4407:4407"
     networks:
       - seq_backend
 
