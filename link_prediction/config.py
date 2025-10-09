@@ -8,3 +8,7 @@ EMB_H5      = "embeddings_molecules_0.v48.h5"
 MODEL_H5    = "model.v48.h5"
 # PROJECT_PATH = os.getenv('PROJECT_PATH')
 # MODEL_PATH = os.getenv('MODEL_PATH')
+
+DIM         = 400
+TOPK        = 100
+COMPARATOR_TYPE  = "cos"

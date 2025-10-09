@@ -13,28 +13,15 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
-@app.post("/aptamer_prot_binding")
+@app.post("/link_prediction")
 @limiter.limit("121/minute")
 async def aptamer_prot_binding(
-        request: Request,
-        sequences: str
+        target_id: str
 ):
-    # res = {}
-    res = []
-    seq_pair_list = sequences.split(";")
-
-    if len(seq_pair_list) > 502:
-        error_text = "The number of sequences in the query exceeds 500"
-        raise HTTPException(status_code=429, detail=error_text)
-
-    for seq_pair in seq_pair_list:
-        ss = seq_pair.split(":")
-        try:
-            # predict(apt_sequences, prot_sequences)
-            ans = predict(ss[0], ss[1])
-        except:
-            ans = None
-        # res[ss] = ans
-        res.append(ans)
-
-    return {"result": res}
+    if len(target_id) < 1:
+        error_text = "ID is invalid"
+        raise HTTPException(status_code=404, detail=error_text)
+    try:
+        return  {"result": predict(target_id)}
+    except:
+        raise HTTPException(status_code=422)

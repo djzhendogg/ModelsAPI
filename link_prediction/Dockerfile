@@ -1,10 +1,10 @@
-FROM python:3.10
+FROM python:3.12
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /apt_prot_model
-WORKDIR /apt_prot_model
+RUN mkdir /link_prediction
+WORKDIR /link_prediction
 
 RUN pip3 install --upgrade pip
 COPY requirements.txt .

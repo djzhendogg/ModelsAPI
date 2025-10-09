@@ -2,14 +2,10 @@ from fastapi import HTTPException
 import joblib
 import warnings
 import numpy as np
-from config import ENTITY_JSON
-
+from config import ENTITY_JSON, EMB_H5, MODEL_H5, DIM
 
 warnings.filterwarnings("ignore")
 
-
-def load_model():
-    return
 
 def load_all_emb():
     with h5py.File(EMB_H5, "r") as hf:
@@ -29,7 +25,7 @@ def get_comparator(name: str):
         "squared_l2": SquaredL2Comparator(),
     }[name]
 
-def load_linear_W_from_h5(path_h5: str, dim: int) -> torch.Tensor:
+def load_linear_w_from_h5() -> torch.Tensor:
     candidates = [
         "model/relations/0/operator/rhs/weight",
         "model/relations/0/operator/weight",
@@ -37,18 +33,18 @@ def load_linear_W_from_h5(path_h5: str, dim: int) -> torch.Tensor:
         "model/relations/0/weight",
         "model/operator/weight",
     ]
-    with h5py.File(path_h5, "r") as hf:
+    with h5py.File(MODEL_H5, "r") as hf:
         for key in candidates:
             if key in hf:
                 W = torch.from_numpy(hf[key][...]).float()
-                if tuple(W.shape) == (dim, dim):
+                if tuple(W.shape) == (DIM, DIM):
                     return W
         # fallback: ищем любой [dim,dim] с 'operator'
         target = None
         def visit(name, obj):
             nonlocal target
             if target is None and isinstance(obj, h5py.Dataset):
-                if obj.shape == (dim, dim) and "operator" in name.lower():
+                if obj.shape == (DIM, DIM) and "operator" in name.lower():
                     target = torch.from_numpy(obj[...]).float()
         hf.visititems(visit)
         if target is not None:
